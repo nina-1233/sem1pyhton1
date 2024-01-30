@@ -21,39 +21,17 @@ output params:
 '''
 def xfile_read(wdir, in_file, tabble_name):
 
-    # Assign spreadsheet filename from wdir to `in_file`
-    # Define output excel file accordingly
     in_file = wdir + in_file
-
-    # Load spreadsheet
     print(f"Loading file '{in_file}' ...")
     xl = pd.ExcelFile(in_file)
-
-    # Print all sheet names
     if DEBUG_INFO: print("All sheet names: ", xl.sheet_names)
-
-    # Load a sheet into a DataFrame by name: df
-    # Print complete table/DataFrame
     if tabble_name == "": tabble_name = 'Quelldaten'
     print(f"Parsing data from sheet '{tabble_name}'")
-    # Generating a data frame df out of tabble_name using xl.parse()
-    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
-
-    # Ihr Code folgt hier: ...
-
     df = pd.read_excel(in_file)
-    #if DEBUG_INFO: print(f"df: {df}")
-
     header_row = df.columns.tolist()
     number_of_headers= len(header_row)
     print(header_row)
     print(number_of_headers)
-
-    # printing the header row as list of values, e.g. 
-    # header_row:  ['Produkt', 'Kunde', 'Qrtl 1', 'Qrtl 2', 'Qrtl 3', 'Qrtl 4']
- 
-    # printing the number of values in the header row, e.g.
-    # number_of_headers:  6
 
     return df, header_row, number_of_headers
 
@@ -72,17 +50,22 @@ def plot_client_data(df, kunde_produkt, quartal):
     # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 
     # Ihr Code folgt hier: ...
-    x_axis_row = df['Kunde', 'Produkt']
+    if kunde_produkt == 'Kunde':
+        x_axis_raw = df.iloc[:, 0]
+    if kunde_produkt == 'Produkt':
+        x_axis_raw = df.iloc[:, 1]
     
-
-
     # erasing double entries to yield in unique data for each kunde_produkt (Kunde oder Produkt)
     # we will have to use a combination of list() and set() to get the resulting list 'x_axis_clean'
 
     # Ihr Code folgt hier: ...
+   # Liste = list()
     
-    df_no_dupicate = df_no_dupicate(subset = ['Kunde', 'Produkt'])
-    x_axis_clean = df_no_dupicate
+    Liste = list(x_axis_raw)
+    x_axis_clean = set(Liste)
+
+   # df_no_dupicate = df_no_dupicate(subset = ['Kunde', 'Produkt'])
+    #x_axis_clean = df_no_dupicate
  
     # if DEBUG_INFO: print(f"x_axis_clean ('{kunde_produkt}'):\n{x_axis_clean}")
 
