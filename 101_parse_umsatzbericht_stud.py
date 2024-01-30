@@ -72,14 +72,17 @@ def plot_client_data(df, kunde_produkt, quartal):
     # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 
     # Ihr Code folgt hier: ...
-    x_axis_row_1 = df['Kunde']
-    x_axis_row2 = df['Produkt']
+    x_axis_row = df['Kunde', 'Produkt']
+    
 
 
     # erasing double entries to yield in unique data for each kunde_produkt (Kunde oder Produkt)
     # we will have to use a combination of list() and set() to get the resulting list 'x_axis_clean'
 
     # Ihr Code folgt hier: ...
+    
+    df_no_dupicate = df_no_dupicate(subset = ['Kunde', 'Produkt'])
+    x_axis_clean = df_no_dupicate
  
     # if DEBUG_INFO: print(f"x_axis_clean ('{kunde_produkt}'):\n{x_axis_clean}")
 
@@ -103,6 +106,11 @@ def plot_client_data(df, kunde_produkt, quartal):
     # Die Werte selbst beziehen wir über das data frame df
 
     # Ihr Code folgt hier: ...
+        
+    if quartal == 'all':
+        for x_axis_value in x_axis_row:
+            y_axis['Qrtl1' : 'Qrtl4']
+
 
     # y_axis (value dictionary) for all x-values in x_axis_clean and quartal '{quartal}': {y_axis}
     print(f"\nSumme der Umsätze über das Quartal '{quartal}' für '{kunde_produkt}' ...\n{y_axis}")
