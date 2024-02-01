@@ -63,6 +63,19 @@ def plot_client_data(df, kunde_produkt, quartal):
     for x_axis_value in x_axis_clean:
         y_axis[x_axis_value] = 0
     
+    for x_axis_value in x_axis_clean:
+            if quartal == 'Qrtl 1':
+                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 1'].sum()
+            if quartal == 'Qrtl 2':
+                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 2'].sum()
+            if quartal == 'Qrtl 3':
+                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 3'].sum()    
+            if quartal == 'Qrtl 4':
+                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 4'].sum()  
+            if quartal == 'all':    
+                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 1'].sum() + df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 2'].sum() + df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 3'].sum() +df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 4'].sum()
+
+    '''
     if kunde_produkt == 'Kunde':
          for x_axis_value in x_axis_clean:
             if quartal == 'Qrtl 1':
@@ -72,7 +85,7 @@ def plot_client_data(df, kunde_produkt, quartal):
             if quartal == 'Qrtl 3':
                 y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 3'].sum()    
             if quartal == 'Qrtl 4':
-                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 4'].sum() 
+                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 4'].sum()  
             if quartal == 'all':    
                 y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 1'].sum() + df.loc[df['Kunde'] == x_axis_value, 'Qrtl 2'].sum() + df.loc[df['Kunde'] == x_axis_value, 'Qrtl 3'].sum() +df.loc[df['Kunde'] == x_axis_value, 'Qrtl 4'].sum() 
 
@@ -88,8 +101,9 @@ def plot_client_data(df, kunde_produkt, quartal):
             if quartal == 'Qrtl 4':
                 y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 4'].sum() 
             if quartal == 'all':
-                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 1'].sum() + df.loc[df['Produkt'] == x_axis_value, 'Qrtl 2'].sum() +  df.loc[df['Produkt'] == x_axis_value, 'Qrtl 3'].sum() + df.loc[df['Produkt'] == x_axis_value, 'Qrtl 4'].sum()
-    
+               y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 1'].sum() + df.loc[df['Produkt'] == x_axis_value, 'Qrtl 2'].sum() +  df.loc[df['Produkt'] == x_axis_value, 'Qrtl 3'].sum() + df.loc[df['Produkt'] == x_axis_value, 'Qrtl 4'].sum()
+    '''
+
     print(f"\nSumme der Umsätze über das Quartal '{quartal}' für '{kunde_produkt}' ...\n{y_axis}")
 
     # Now, we are ready to plot y_axis (as value dictionary). We use the dictionary keys as x-values,
