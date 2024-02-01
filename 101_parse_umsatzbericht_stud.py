@@ -23,11 +23,14 @@ def xfile_read(wdir, in_file, tabble_name):
 
     in_file = wdir + in_file
     print(f"Loading file '{in_file}' ...")
+
     xl = pd.ExcelFile(in_file)
-    if DEBUG_INFO: print("All sheet names: ", xl.sheet_names)
+    #if DEBUG_INFO: print("All sheet names: ", xl.sheet_names)
+
     if tabble_name == "": tabble_name = 'Quelldaten'
     print(f"Parsing data from sheet '{tabble_name}'")
     df = pd.read_excel(in_file)
+
     header_row = df.columns.tolist()
     number_of_headers= len(header_row)
     print(header_row)
@@ -45,57 +48,48 @@ output:
 - None (the procedures will use plt.show() internally to plot a graph)
 '''
 def plot_client_data(df, kunde_produkt, quartal):
-    # Plot data for each single kunde_produkt (Kunde oder Produkt)
-    # First, we have to extract kunde_produkt (Kunde oder Produkt) entries from df and save them to x_axis_raw
-    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 
-    # Ihr Code folgt hier: ...
     if kunde_produkt == 'Kunde':
-        x_axis_raw = df.iloc[:, 0]
+        x_axis_raw = df['Kunde']
     if kunde_produkt == 'Produkt':
-        x_axis_raw = df.iloc[:, 1]
-    
-    # erasing double entries to yield in unique data for each kunde_produkt (Kunde oder Produkt)
-    # we will have to use a combination of list() and set() to get the resulting list 'x_axis_clean'
-
-    # Ihr Code folgt hier: ...
-   # Liste = list()
+        x_axis_raw = df['Produkt']
     
     Liste = list(x_axis_raw)
     x_axis_clean = set(Liste)
-
-   # df_no_dupicate = df_no_dupicate(subset = ['Kunde', 'Produkt'])
-    #x_axis_clean = df_no_dupicate
  
-    # if DEBUG_INFO: print(f"x_axis_clean ('{kunde_produkt}'):\n{x_axis_clean}")
+    #if DEBUG_INFO: print(f"x_axis_clean ('{kunde_produkt}'):\n{x_axis_clean}")
 
-    # initializing values dictionary (y_axis == quartal) for each (cleaned) kunde_produkt (Kunde oder Produkt)
     y_axis = {}
     for x_axis_value in x_axis_clean:
         y_axis[x_axis_value] = 0
-
-    # Summing up quartal values for each kunde_produkt in values dictionary
-    # To accomplish this, we have to iterate and sum up over all values in list 'x_axis_raw', thus:
-    # for x_axis_value in x_axis_raw:
-
-    # Case 1: quartal == "all": Berechnung von y_axis[x_axis_value], also des y-Wertes am x-Wert 'x_axis_value' (z.B. Kunde 'ANTON')
-    # Den zu brechnenden y-Wert müssen wir über alle Quartale ("Qrtl 1" bis "Qrtl 4") und für alle 
-    # 'x_axis_value' (also an allen Stellen, an denen z.B. Kunde 'ANTON' erwähnt wird) summieren. 
-    # Die Werte selbst beziehen wir über das data frame df
     
-    # Case 2: quartal = "Qrtl 1", etc.: Berechnung von y_axis[x_axis_value], also des y-Wertes am x-Wert 'x_axis_value' (z.B. Kunde 'ANTON')
-    # Den zu brechnenden y-Wert müssen wir über das Quartal 'quartal' (Parameter!) und für alle 
-    # 'x_axis_value' (also an allen Stellen, an denen z.B. Kunde 'ANTON' erwähnt wird) summieren. 
-    # Die Werte selbst beziehen wir über das data frame df
+    if kunde_produkt == 'Kunde':
+         for x_axis_value in x_axis_clean:
+            if quartal == 'Qrtl 1':
+                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 1'].sum()
+            if quartal == 'Qrtl 2':
+                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 2'].sum()
+            if quartal == 'Qrtl 3':
+                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 3'].sum()    
+            if quartal == 'Qrtl 4':
+                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 4'].sum() 
+            if quartal == 'all':    
+                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 1'].sum() + df.loc[df['Kunde'] == x_axis_value, 'Qrtl 2'].sum() + df.loc[df['Kunde'] == x_axis_value, 'Qrtl 3'].sum() +df.loc[df['Kunde'] == x_axis_value, 'Qrtl 4'].sum() 
 
-    # Ihr Code folgt hier: ...
-        
-    if quartal == 'all':
-        for x_axis_value in x_axis_row:
-            y_axis['Qrtl1' : 'Qrtl4']
-
-
-    # y_axis (value dictionary) for all x-values in x_axis_clean and quartal '{quartal}': {y_axis}
+    
+    if kunde_produkt == 'Produkt':
+         for x_axis_value in x_axis_clean:
+            if quartal == 'Qrtl 1':
+                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 1'].sum()
+            if quartal == 'Qrtl 2':
+                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 2'].sum()
+            if quartal == 'Qrtl 3':
+                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 3'].sum()    
+            if quartal == 'Qrtl 4':
+                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 4'].sum() 
+            if quartal == 'all':
+                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 1'].sum() + df.loc[df['Produkt'] == x_axis_value, 'Qrtl 2'].sum() +  df.loc[df['Produkt'] == x_axis_value, 'Qrtl 3'].sum() + df.loc[df['Produkt'] == x_axis_value, 'Qrtl 4'].sum()
+    
     print(f"\nSumme der Umsätze über das Quartal '{quartal}' für '{kunde_produkt}' ...\n{y_axis}")
 
     # Now, we are ready to plot y_axis (as value dictionary). We use the dictionary keys as x-values,
