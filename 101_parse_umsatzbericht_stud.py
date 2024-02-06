@@ -8,32 +8,29 @@ import matplotlib.pyplot as plt
 
 DEBUG_INFO = True
 
-'''
-xfile_read: reading and parsing an input excel file
-input parameters: 
-- wdir: working directory
-- in_file: input file name  
-- tabble_name: tab name of excel sheet to be analysed (parsed)
-output params:
-- df: data frame (for further analysis of Excel data in concern)
-- header_row: list of header entries of sheet in concern
-- number_of_headers: number of entries in header_row list
-'''
 def xfile_read(wdir, in_file, tabble_name):
 
+    # richtigen Pfad zusammensetzen
     in_file = wdir + in_file
     print(f"Loading file '{in_file}' ...")
 
+    # erstellt ein Excel-File in pandas 
     xl = pd.ExcelFile(in_file)
-    #if DEBUG_INFO: print("All sheet names: ", xl.sheet_names)
+    if DEBUG_INFO: print("All sheet names: ", xl.sheet_names)
 
+    # table_name richtig benennen
     if tabble_name == "": tabble_name = 'Quelldaten'
     print(f"Parsing data from sheet '{tabble_name}'")
+
+    # Data Frame aus Excel-File erzeugen
     df = pd.read_excel(in_file)
 
+    # Namen der Spalten werden ausgegeben
     header_row = df.columns.tolist()
-    number_of_headers= len(header_row)
     print(header_row)
+
+    # Anazhl der Spalten
+    number_of_headers= len(header_row)
     print(number_of_headers)
 
     return df, header_row, number_of_headers
@@ -49,70 +46,88 @@ output:
 '''
 def plot_client_data(df, kunde_produkt, quartal):
 
+    # abhängig von Auswahl werden die passenden Daten (Kundenname oder Produktbezeichnung) aus Data Frame entnommen
     if kunde_produkt == 'Kunde':
         x_axis_raw = df['Kunde']
     if kunde_produkt == 'Produkt':
         x_axis_raw = df['Produkt']
     
+    # wird in Liste umgewandelt und anschließend bereinigt von Duplikaten 
     Liste = list(x_axis_raw)
     x_axis_clean = set(Liste)
  
-    #if DEBUG_INFO: print(f"x_axis_clean ('{kunde_produkt}'):\n{x_axis_clean}")
+    if DEBUG_INFO: print(f"x_axis_clean ('{kunde_produkt}'):\n{x_axis_clean}")
 
+    # leeres Dictionary wird inalisiert 
     y_axis = {}
+    # die Werte des Dictionary werden gleich null gesetzt 
     for x_axis_value in x_axis_clean:
         y_axis[x_axis_value] = 0
-    
+
+    # Summe der ausgewählten Variable (Kunde oder Produkt) wird für einzelne Quartale oder für das ganze Jahr gebildet           
     for x_axis_value in x_axis_clean:
             if quartal == 'Qrtl 1':
-                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 1'].sum()
+                y_axis[x_axis_value] = round(df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 1'].sum(), 2)
             if quartal == 'Qrtl 2':
-                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 2'].sum()
+                y_axis[x_axis_value] = round (df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 2'].sum(), 2)
             if quartal == 'Qrtl 3':
-                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 3'].sum()    
+                y_axis[x_axis_value] = round(df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 3'].sum(), 2) 
             if quartal == 'Qrtl 4':
-                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 4'].sum()  
+                y_axis[x_axis_value] = round(df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 4'].sum(), 2)
             if quartal == 'all':    
-                y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 1'].sum() + df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 2'].sum() + df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 3'].sum() +df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 4'].sum()
+                y_axis[x_axis_value] = round(df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 1'].sum() + \
+                df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 2'].sum() + \
+                df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 3'].sum() + \
+                df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 4'].sum(), 2)
 
-    '''
-    if kunde_produkt == 'Kunde':
-         for x_axis_value in x_axis_clean:
-            if quartal == 'Qrtl 1':
-                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 1'].sum()
-            if quartal == 'Qrtl 2':
-                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 2'].sum()
-            if quartal == 'Qrtl 3':
-                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 3'].sum()    
-            if quartal == 'Qrtl 4':
-                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 4'].sum()  
-            if quartal == 'all':    
-                y_axis[x_axis_value] = df.loc[df['Kunde'] == x_axis_value, 'Qrtl 1'].sum() + df.loc[df['Kunde'] == x_axis_value, 'Qrtl 2'].sum() + df.loc[df['Kunde'] == x_axis_value, 'Qrtl 3'].sum() +df.loc[df['Kunde'] == x_axis_value, 'Qrtl 4'].sum() 
-
-    
-    if kunde_produkt == 'Produkt':
-         for x_axis_value in x_axis_clean:
-            if quartal == 'Qrtl 1':
-                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 1'].sum()
-            if quartal == 'Qrtl 2':
-                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 2'].sum()
-            if quartal == 'Qrtl 3':
-                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 3'].sum()    
-            if quartal == 'Qrtl 4':
-                y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 4'].sum() 
-            if quartal == 'all':
-               y_axis[x_axis_value] = df.loc[df['Produkt'] == x_axis_value, 'Qrtl 1'].sum() + df.loc[df['Produkt'] == x_axis_value, 'Qrtl 2'].sum() +  df.loc[df['Produkt'] == x_axis_value, 'Qrtl 3'].sum() + df.loc[df['Produkt'] == x_axis_value, 'Qrtl 4'].sum()
-    '''
-
+    # Ausgabe der ausgewählten Variable mit den passenden Summe im jeweiligen ausgewählten Quartal
     print(f"\nSumme der Umsätze über das Quartal '{quartal}' für '{kunde_produkt}' ...\n{y_axis}")
 
+    # Optionale Aufgabe 4 (prozentuale Angabe)
+    # Gesamtumsatz der Datei
+    gesamtumsatz = df['Qrtl 1'].sum() + df['Qrtl 2'].sum() + df['Qrtl 3'].sum() + df['Qrtl 4'].sum()
+
+    # Berechnung der Summe des ausgewählten Quartals
+    Summe_Quartal = 0
+    for wert in y_axis.values():
+        Summe_Quartal += wert
+ 
+    # Berechnung des prozentualen Anteils jedes Kunden oder Produkts am Gesamtumsatz
+    prozentualer_anteil= (Summe_Quartal/gesamtumsatz)*100
+ 
+    #Ausagbe des prozentualen Anteils
+    print(f"\nProzentualer Anteil am Gesamtumsatzes:\n{prozentualer_anteil}")
+ 
     # Now, we are ready to plot y_axis (as value dictionary). We use the dictionary keys as x-values,
     # dictionary values as y-values and function plt.plot(), i.e. matplotlib.pyplot.plot().
     # https://www.w3schools.com/python/python_dictionaries.asp
-    # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html 
+    # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html
  
     # Ihr Code folgt hier: ...
-
+    
+    #Punktediagramm
+    plt.scatter(y_axis, quartal, color='red', marker='o') 
+    # marker => In welcher Form die Punkte angegeben werden sollen, erst die x-Achse dann die y-Achse
+    plt.title (f'Umsätze nach {kunde_produkt} im Quartal {quartal}') #Titel des Diagramms
+ 
+    #Beschriftung der Achsen
+    plt.xlabel(kunde_produkt)
+    plt.ylabel(quartal)
+ 
+    plt.grid(True) #Gitterlinien für eine besser übersicht
+    plt.show()
+ 
+    #Säulensiagramm
+    plt.bar(y_axis, quartal, color='blue', alpha=1) #alpha => Tranzparenz der Säulen, auch hier erst x_Achse dann y-Achse
+    plt.title(f'Umsätze nach {kunde_produkt} im Quartal {quartal}') #Titel des Diagramms
+ 
+    #Beschrfitung der Achsen
+    plt.xlabel(kunde_produkt)
+    plt.ylabel(quartal)
+ 
+    plt.grid(axis='y') #Auf wechler Achse die Säulen beginnen sollen
+    plt.show()
+ 
     # You can specify a rotation for the tick labels in degrees or with keywords.
     # https://matplotlib.org/gallery/ticks_and_spines/ticklabels_rotation.html#sphx-glr-gallery-ticks-and-spines-ticklabels-rotation-py
     plt.xticks(rotation='vertical')
@@ -124,7 +139,7 @@ def plot_client_data(df, kunde_produkt, quartal):
     plt.ylabel(quartal)
     # display plot
     plt.show()
-
+    
     return 
 
 
