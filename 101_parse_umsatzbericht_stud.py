@@ -66,24 +66,18 @@ def plot_client_data(df, kunde_produkt, quartal):
 
     # Summe der ausgewählten Variable (Kunde oder Produkt) wird für einzelne Quartale oder für das ganze Jahr gebildet           
     for x_axis_value in x_axis_clean:
-            if quartal == 'Qrtl 1':
-                y_axis[x_axis_value] = round(df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 1'].sum(), 2)
-            if quartal == 'Qrtl 2':
-                y_axis[x_axis_value] = round (df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 2'].sum(), 2)
-            if quartal == 'Qrtl 3':
-                y_axis[x_axis_value] = round(df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 3'].sum(), 2) 
-            if quartal == 'Qrtl 4':
-                y_axis[x_axis_value] = round(df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 4'].sum(), 2)
-            if quartal == 'all':    
-                y_axis[x_axis_value] = round(df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 1'].sum() + \
-                df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 2'].sum() + \
-                df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 3'].sum() + \
-                df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 4'].sum(), 2)
+        # Besonderheit, da man 'all' nicht als Variable benutzen kann
+        if quartal == 'all':    
+            y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 1'].sum() + \
+            df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 2'].sum() + \
+            df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 3'].sum() + \
+            df.loc[df[kunde_produkt] == x_axis_value, 'Qrtl 4'].sum()
+        else: 
+            y_axis[x_axis_value] = df.loc[df[kunde_produkt] == x_axis_value, quartal].sum()
 
     # Ausgabe der ausgewählten Variable mit den passenden Summe im jeweiligen ausgewählten Quartal
     print(f"\nSumme der Umsätze über das Quartal '{quartal}' für '{kunde_produkt}' ...\n{y_axis}")
 
-    # Optionale Aufgabe 4 (prozentuale Angabe)
     # Gesamtumsatz der Datei
     gesamtumsatz = df['Qrtl 1'].sum() + df['Qrtl 2'].sum() + df['Qrtl 3'].sum() + df['Qrtl 4'].sum()
 
@@ -95,9 +89,25 @@ def plot_client_data(df, kunde_produkt, quartal):
     # Berechnung des prozentualen Anteils jedes Kunden oder Produkts am Gesamtumsatz
     prozentualer_anteil= (Summe_Quartal/gesamtumsatz)*100
  
-    #Ausagbe des prozentualen Anteils
+    #Ausagbe des prozentualen Anteils des Quartals in Vergleich zum Gesamtumsatz
     print(f"\nProzentualer Anteil am Gesamtumsatzes:\n{prozentualer_anteil}")
- 
+
+    # Optionale Aufgabe 4 (prozentuale Angabe)
+    # Schleife um alle Werte von y_axis zur Verrechnung mit dem ausgewählten Quartal um für jeden Kunden / Produkt einen Prozentsatz auzugegen
+    for x_axis_value in y_axis.values():
+        # Besonderheit bei all, deswegen extra Fall 
+        if quartal == 'all':
+            # a = x_axis_value
+            prozent = (x_axis_value / gesamtumsatz) * 100  
+            gesuchter_schluessel = list(y_axis.keys())[list(y_axis.values()).index(x_axis_value)]
+            print(f"\nProzentualer Anteil der Umsätze am Gesamtumsatz über das Quartal '{quartal}' für '{gesuchter_schluessel}' ...\n{prozent}") 
+        else:
+            # a = x_axis_value
+            prozent = (x_axis_value / df[quartal].sum()) * 100  
+            gesuchter_schluessel = list(y_axis.keys())[list(y_axis.values()).index(x_axis_value)]
+            print(f"\nProzentualer Anteil der Umsätze am Gesamtumsatz über das Quartal '{quartal}' für '{gesuchter_schluessel}' ...\n{prozent}") 
+
+    
     # Now, we are ready to plot y_axis (as value dictionary). We use the dictionary keys as x-values,
     # dictionary values as y-values and function plt.plot(), i.e. matplotlib.pyplot.plot().
     # https://www.w3schools.com/python/python_dictionaries.asp
