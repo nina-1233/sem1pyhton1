@@ -97,47 +97,51 @@ def plot_client_data(df, kunde_produkt, quartal):
     for x_axis_value in y_axis.values():
         # Besonderheit bei all, deswegen extra Fall 
         if quartal == 'all':
-            # a = x_axis_value
+            # Prozentualer Anteil wird berechnet im Vergleich zum Gesamtzumsatz
             prozent = (x_axis_value / gesamtumsatz) * 100  
+            # der jeweilige Schlüssel wird dazu ermittelt
             gesuchter_schluessel = list(y_axis.keys())[list(y_axis.values()).index(x_axis_value)]
+            # Ausgabe
             print(f"\nProzentualer Anteil der Umsätze am Gesamtumsatz über das Quartal '{quartal}' für '{gesuchter_schluessel}' ...\n{prozent}") 
         else:
-            # a = x_axis_value
+            # Prozentualer Anteil wird berechnet vom jeweiligen ausgewählten Quartal
             prozent = (x_axis_value / df[quartal].sum()) * 100  
+            # der jeweilige Schlüssel wird dazu ermittelt
             gesuchter_schluessel = list(y_axis.keys())[list(y_axis.values()).index(x_axis_value)]
+            # Ausgabe
             print(f"\nProzentualer Anteil der Umsätze am Gesamtumsatz über das Quartal '{quartal}' für '{gesuchter_schluessel}' ...\n{prozent}") 
+    
+    # x-Achse: Personen aus den Schlüsselwerten, y-Achse: Ergebnisse aus den Werten zu den Schlüsseln
+    Personen = list(y_axis.keys())
+    Ergebnisse = list (y_axis.values())
 
-    
-    # Now, we are ready to plot y_axis (as value dictionary). We use the dictionary keys as x-values,
-    # dictionary values as y-values and function plt.plot(), i.e. matplotlib.pyplot.plot().
-    # https://www.w3schools.com/python/python_dictionaries.asp
-    # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html
- 
-    # Ihr Code folgt hier: ...
-    
-    #Punktediagramm
-    plt.scatter(y_axis, quartal, color='red', marker='o') 
+    # Punktediagramm
+    plt.scatter(Personen, Ergebnisse, color='red', marker='o') 
     # marker => In welcher Form die Punkte angegeben werden sollen, erst die x-Achse dann die y-Achse
+    
     plt.title (f'Umsätze nach {kunde_produkt} im Quartal {quartal}') #Titel des Diagramms
  
     #Beschriftung der Achsen
     plt.xlabel(kunde_produkt)
+    plt.xticks(rotation='vertical')
     plt.ylabel(quartal)
  
     plt.grid(True) #Gitterlinien für eine besser übersicht
     plt.show()
  
     #Säulensiagramm
-    plt.bar(y_axis, quartal, color='blue', alpha=1) #alpha => Tranzparenz der Säulen, auch hier erst x_Achse dann y-Achse
+    plt.bar(Personen, Ergebnisse, color='blue', alpha=1) #alpha => Tranzparenz der Säulen, auch hier erst x_Achse dann y-Achse
     plt.title(f'Umsätze nach {kunde_produkt} im Quartal {quartal}') #Titel des Diagramms
  
     #Beschrfitung der Achsen
     plt.xlabel(kunde_produkt)
+    plt.xticks(rotation='vertical')
     plt.ylabel(quartal)
  
     plt.grid(axis='y') #Auf wechler Achse die Säulen beginnen sollen
     plt.show()
  
+    '''
     # You can specify a rotation for the tick labels in degrees or with keywords.
     # https://matplotlib.org/gallery/ticks_and_spines/ticklabels_rotation.html#sphx-glr-gallery-ticks-and-spines-ticklabels-rotation-py
     plt.xticks(rotation='vertical')
@@ -149,7 +153,8 @@ def plot_client_data(df, kunde_produkt, quartal):
     plt.ylabel(quartal)
     # display plot
     plt.show()
-    
+    '''
+
     return 
 
 
