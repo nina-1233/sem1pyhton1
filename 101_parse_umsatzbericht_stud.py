@@ -6,7 +6,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-DEBUG_INFO = True
+DEBUG_INFO = False
 
 def xfile_read(wdir, in_file, tabble_name):
 
@@ -15,8 +15,8 @@ def xfile_read(wdir, in_file, tabble_name):
     print(f"Loading file '{in_file}' ...")
 
     # erstellt ein Excel-File in pandas 
-    xl = pd.ExcelFile(in_file)
-    if DEBUG_INFO: print("All sheet names: ", xl.sheet_names)
+    #xl = pd.ExcelFile(in_file)
+    #if DEBUG_INFO: print("All sheet names: ", xl.sheet_names)
 
     # table_name richtig benennen
     if tabble_name == "": tabble_name = 'Quelldaten'
@@ -35,15 +35,7 @@ def xfile_read(wdir, in_file, tabble_name):
 
     return df, header_row, number_of_headers
 
-'''
-plot_client_data: plotting dataframes slices using 'Kunde' or 'Produkt' and 'Quartal' as slicing params 
-input:
-- df: data frame 
-- kunde_produkt: 'Kunde' or 'Produkt' (slicing param) 
-- quartal: 'Qrtl x' or 'all' (slicing param)
-output: 
-- None (the procedures will use plt.show() internally to plot a graph)
-'''
+
 def plot_client_data(df, kunde_produkt, quartal):
 
     # abhängig von Auswahl werden die passenden Daten (Kundenname oder Produktbezeichnung) aus Data Frame entnommen
@@ -124,6 +116,7 @@ def plot_client_data(df, kunde_produkt, quartal):
     #Beschriftung der Achsen
     plt.xlabel(kunde_produkt)
     plt.xticks(rotation='vertical')
+    plt.subplots_adjust(bottom=0.4)
     plt.ylabel(quartal)
  
     plt.grid(True) #Gitterlinien für eine besser übersicht
@@ -136,24 +129,11 @@ def plot_client_data(df, kunde_produkt, quartal):
     #Beschrfitung der Achsen
     plt.xlabel(kunde_produkt)
     plt.xticks(rotation='vertical')
+    plt.subplots_adjust(bottom=0.4)
     plt.ylabel(quartal)
  
     plt.grid(axis='y') #Auf wechler Achse die Säulen beginnen sollen
     plt.show()
- 
-    '''
-    # You can specify a rotation for the tick labels in degrees or with keywords.
-    # https://matplotlib.org/gallery/ticks_and_spines/ticklabels_rotation.html#sphx-glr-gallery-ticks-and-spines-ticklabels-rotation-py
-    plt.xticks(rotation='vertical')
-    # Tweak spacing to prevent clipping of tick-labels
-    plt.subplots_adjust(bottom=0.4)
-    # adjusting axis intervalls if needed
-    # plt.axis([0, 6, 0, 20])
-    # labelling of axes
-    plt.ylabel(quartal)
-    # display plot
-    plt.show()
-    '''
 
     return 
 
