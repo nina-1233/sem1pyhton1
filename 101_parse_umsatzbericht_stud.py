@@ -7,7 +7,7 @@
  
 import pandas as pd
 import matplotlib.pyplot as plt
- 
+# hallo
 # Zwischenschritte werden bei False ausgeblendet z.B. seheet_names weden ausgeblendet bei False und bei True eingebelendet
 DEBUG_INFO = False
  
@@ -118,6 +118,7 @@ def plot_client_data(df, kunde_produkt, quartal):
             print(f"\nProzentualer Anteil der Umsätze am Gesamtumsatz über das Quartal '{quartal}' für '{gesuchter_schluessel}' ...\n{prozent}")
    
     
+
 # Listen bennen
     Personen = list(y_axis.keys()) #Liste aus den Personen aus den Schlüsselwerten (x-Achse)
     Ergebnisse = list (y_axis.values()) # Ergebnisse aus den Werten zu den Schlüsseln (y-Achse)
@@ -155,7 +156,6 @@ def plot_client_data(df, kunde_produkt, quartal):
     plt.show()                                                                                                                                       # Anzeige des Diagramms
  
     return
- 
  
 # MAIN
 '''plt.ioff()''' #für IOS Nutzer (steht für 'intereactive off': der interaktive Modus von Matplotlib wird deaktiviert, erst bei Anweisung z.B. plt.show() führt dieser sie aus)
